@@ -1,0 +1,22 @@
+{
+    "configurations": [
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug ActionsList",
+            "program": ".build/debug/ActionsList",
+            "args": [],
+            "cwd": "${workspaceFolder:ActionsList}",
+            "preLaunchTask": "swift: Build Debug ActionsList"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Release ActionsList",
+            "program": ".build/release/ActionsList",
+            "args": [],
+            "cwd": "${workspaceFolder:ActionsList}",
+            "preLaunchTask": "swift: Build Release ActionsList"
+        }
+    ]
+}
