@@ -32,7 +32,7 @@ struct ActionsService {
         var request = URLRequest(url: url)
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
-        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+        URLSession.shared.dataTask(with: request) { data, response, error in
             guard let response = response as? HTTPURLResponse else { return }
             
             if let responseError = self.handleNetworkResponse(response: response) {
@@ -49,10 +49,10 @@ struct ActionsService {
                 let actions = try JSONDecoder().decode([Action].self, from: data)
                 completionHandler(.success(actions))
             } catch {
+                
                 completionHandler(.failure(.jsonDecodingError))
             }
-        }
-        task.resume()
+        }.resume()
     }
     
     func getActions() async throws -> [Action] {

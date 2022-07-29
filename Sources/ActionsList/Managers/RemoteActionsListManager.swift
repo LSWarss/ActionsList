@@ -18,33 +18,40 @@ final class RemoteActionsListManager: ActionsListManager {
     }
     
     func getActions() {
-        service.getActions(completionHandler: { [unowned self] result in
+        service.getActions(completionHandler: { [weak self] result in
             switch result {
             case .success(let actions):
                 self.actions = actions
                 
-                print("====================================================================")
-                actions
-                    .sorted { !$0.completed  && $1.completed }
-                    .forEach { action in
-                        action.completed ? print("✅: \(action.name)") : print("❗️: \(action.id) \(action.name)")
-                    }
-                print("====================================================================")
+//                print("====================================================================")
+//                actions
+//                    .sorted { !$0.completed  && $1.completed }
+//                    .forEach { action in
+//                        action.completed ? print("✅: \(action.title)") : print("❗️: \(action.id) \(action.title)")
+//                    }
+//                print("====================================================================")
             case .failure(let error):
                 print(error)
             }
         })
     }
     
-    func getActions() async throws {
-        actions = try await service.getActions()
-        print("====================================================================")
-        actions
-            .sorted { !$0.completed  && $1.completed }
-            .forEach { action in
-                action.completed ? print("✅: \(action.name)") : print("❗️: \(action.id) \(action.name)")
+    func getActionsAsync() {
+        if #available(macOS 10.15, *) {
+            Task {
+                actions = try! await service.getActions()
             }
-        print("====================================================================")
+        } else {
+            // Fallback on earlier versions
+        }
+        
+//        print("====================================================================")
+//        actions
+//            .sorted { !$0.completed  && $1.completed }
+//            .forEach { action in
+//                action.completed ? print("✅: \(action.title)") : print("❗️: \(action.id) \(action.title)")
+//            }
+//        print("====================================================================")
     }
     
     func showActions() throws {

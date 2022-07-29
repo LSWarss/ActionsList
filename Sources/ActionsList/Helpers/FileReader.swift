@@ -9,7 +9,7 @@ import Foundation
 
 protocol FileReader {
     func readFile(inputFilePath: String) throws -> String
-    func readFile<T: Codable>(inputFilePath: String) throws -> T
+    func readFile<T: Decodable>(inputFilePath: String) throws -> T
 }
 
 enum FileReaderError: Error {
@@ -40,7 +40,7 @@ struct LocalFileReader: FileReader {
         return savedData
     }
     
-    func readFile<T: Codable>(inputFilePath: String) throws -> T {
+    func readFile<T: Decodable>(inputFilePath: String) throws -> T {
         guard let data = fileManager.contents(atPath: inputFilePath) else {
             throw FileReaderError.fileNotFound(name: inputFilePath)
         }

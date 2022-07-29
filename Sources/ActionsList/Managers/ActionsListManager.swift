@@ -30,7 +30,7 @@ final class LocalActionsListManager: ActionsListManager {
         actions
             .sorted { !$0.completed  && $1.completed }
             .forEach { action in
-                action.completed ? print("✅: \(action.name)") : print("❗️: \(action.id) \(action.name)")
+                action.completed ? print("✅: \(action.title)") : print("❗️: \(action.id) \(action.title)")
             }
         print("====================================================================")
     }
@@ -38,7 +38,7 @@ final class LocalActionsListManager: ActionsListManager {
     func addAction(with name: String) throws {
         actions
             .append(Action(id: UUID().uuidString,
-                           name: name,
+                           title: name,
                            completed: false))
         try localActionsRepository.saveActions(actions: actions)
         showActions()
