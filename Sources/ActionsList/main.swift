@@ -8,11 +8,19 @@ enum ActionControl: String, ExpressibleByArgument {
     case complete
 }
 
+enum InputType: String, ExpressibleByArgument {
+    case remote
+    case local
+}
+
 struct ActionsList: ParsableCommand {
     static let configuration = CommandConfiguration(abstract: "A Swift command-line tool for creating and managing action lists")
     
+    @Option
+    private var inputType: InputType
+    
     @Option(name: [.short, .customLong("read")], help: "A file to read and write actions list to")
-    private var inputFile: String
+    private var file: String?
     
     @Option(name: [.short, .customLong("option")])
     private var action: ActionControl
@@ -24,21 +32,30 @@ struct ActionsList: ParsableCommand {
     private var id: String?
     
     func run() throws {
-        let manager = try LocalActionsListManager(localActionsRepository: LocalActionsRepository(repositoryFile: inputFile))
+        let actionsManager: ActionsListManager!
+        
+        switch inputType {
+        case .remote:
+            actionsManager = RemoteActionsListManager(service: ActionsService())
+        case .local:
+            actionsManager = try LocalActionsListManager(localActionsRepository: LocalActionsRepository(repositoryFile: file ?? ""))
+        }
+
+        
         switch action {
         case .add:
             if let name = name {
-                try manager.addAction(with: name)
+                try actionsManager.addAction(with: name)
             }
         case .show:
-            manager.showActions()
+            try actionsManager.showActions()
         case .delete:
             if let id = id {
-                try manager.deleteAction(with: id)
+                try actionsManager.deleteAction(with: id)
             }
         case .complete:
             if let id = id {
-                try manager.completeAction(with: id)
+                try actionsManager.completeAction(with: id)
             }
         }
     }

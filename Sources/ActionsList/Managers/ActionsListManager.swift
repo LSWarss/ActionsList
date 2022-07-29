@@ -9,6 +9,10 @@ import Foundation
 
 protocol ActionsListManager {
     var actions: [Action] { get set }
+    func showActions() throws
+    func addAction(with name: String) throws
+    func completeAction(with id: String) throws
+    func deleteAction(with id: String) throws
 }
 
 final class LocalActionsListManager: ActionsListManager {
@@ -18,6 +22,7 @@ final class LocalActionsListManager: ActionsListManager {
     init(localActionsRepository: LocalActionsRepository) throws {
         self.localActionsRepository = localActionsRepository
         self.actions = try localActionsRepository.readActions()
+        print("LOCAL INITALIZED")
     }
     
     func showActions() {
